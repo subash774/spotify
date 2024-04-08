@@ -73,7 +73,7 @@ func TestRemoveTracksFromLibrary(t *testing.T) {
 }
 
 func TestGetSavedTracksFromLibrary(t *testing.T) {
-	client, server := testClientFile(http.StatusOK, "test_data/user_saved_tracks.json")
+	client, server := testClientFile(http.StatusOK, "test_data/user_saved_tracks.txt")
 	defer server.Close()
 
 	tracks, err := client.GetSavedTracksFromLibrary(context.Background())
