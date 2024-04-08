@@ -3,6 +3,7 @@ package spotify
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 	"testing"
 )
@@ -68,6 +69,34 @@ func TestRemoveTracksFromLibrary(t *testing.T) {
 	err := client.RemoveTracksFromLibrary(context.Background(), "4iV5W9uYEdYUVa79Axb7Rh", "1301WleyT98MSxVHPZCA6M")
 	if err != nil {
 		t.Error(err)
+	}
+}
+
+func TestGetSavedTracksFromLibrary(t *testing.T) {
+	client, server := testClientFile(http.StatusOK, "test_data/user_saved_tracks.json")
+	defer server.Close()
+
+	tracks, err := client.GetSavedTracksFromLibrary(context.Background())
+	if err != nil {
+		t.Error(err)
+	}
+
+	if tracks.Total != 3 {
+		t.Errorf("Got %d tracks, expected 3", tracks.Total)
+	}
+	expected := "55nlbqqFVnSsArIeYSQlqx"
+	fmt.Println(tracks.Tracks)
+
+	if tracks.Tracks[0].ID.String() != expected {
+		t.Errorf("Got track ID of %s, expected first track ID in the response to be %s", tracks.Tracks[0].ID, expected)
+	}
+
+	if tracks.Tracks[0].Album.Name != "Love In The Future" {
+		t.Errorf("Got album name of %s, expected first track album name in the response to be Love In The Future", tracks.Tracks[0].Album.Name)
+	}
+
+	if tracks.Tracks[0].Name != "You & I (Nobody In The World)" {
+		t.Errorf("Got track name of %s, expected first track name in the response to be You & I (Nobody In The World)", tracks.Tracks[0].Name)
 	}
 }
 

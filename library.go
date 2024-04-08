@@ -58,6 +58,27 @@ func (c *Client) AddAlbumsToLibrary(ctx context.Context, ids ...ID) error {
 	return c.modifyLibrary(ctx, "albums", true, ids...)
 }
 
+// GetSavedTracksFromLibrary gets the current user's saved tracks from "Your Music" library.
+// This call requires the ScopeUserLibraryRead scope.
+// It returns a SavedTrackPage
+//
+// Supported Options: market, limit, offset.
+func (c *Client) GetSavedTracksFromLibrary(ctx context.Context, opts ...RequestOption) (*SavedTrackPage, error) {
+	spotifyURL := c.baseURL + "me/tracks"
+	if params := processOptions(opts...).urlParams.Encode(); params != "" {
+		spotifyURL += "?" + params
+	}
+
+	var result SavedTrackPage
+
+	err := c.get(ctx, spotifyURL, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
+
 // RemoveAlbumsFromLibrary removes one or more albums from the current user's
 // "Your Albums" library.  This call requires the ScopeUserModifyLibrary scope.
 // Trying to remove a track when you do not have the user's authorization
