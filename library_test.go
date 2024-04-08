@@ -3,7 +3,6 @@ package spotify
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/http"
 	"testing"
 )
@@ -85,7 +84,6 @@ func TestGetSavedTracksFromLibrary(t *testing.T) {
 		t.Errorf("Got %d tracks, expected 3", tracks.Total)
 	}
 	expected := "55nlbqqFVnSsArIeYSQlqx"
-	fmt.Println(tracks.Tracks)
 
 	if tracks.Tracks[0].ID.String() != expected {
 		t.Errorf("Got track ID of %s, expected first track ID in the response to be %s", tracks.Tracks[0].ID, expected)
